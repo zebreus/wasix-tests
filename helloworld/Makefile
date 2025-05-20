@@ -8,7 +8,6 @@ WASMER?=wasmer
 CC=clang-19
 CXX=clang++-19
 LD=clang-19
-BASHUNIT=../lib/bashunit
 
 CFLAGS=""
 CFLAGS+=--target=wasm32-wasi

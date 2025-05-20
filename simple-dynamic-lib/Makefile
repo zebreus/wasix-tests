@@ -6,8 +6,6 @@ WASMER?=wasmer
 CC=clang-19
 CXX=clang++-19
 LD=clang-19
-RAW_LD=wasm-ld-19
-BASHUNIT=../lib/bashunit
 
 CFLAGS=""
 CFLAGS+=--target=wasm32-wasi
@@ -30,14 +28,6 @@ LDFLAGS+=-Wl,--export-if-defined=__wasm_apply_data_relocs
 LDFLAGS+=-Wl,--experimental-pic
 LDFLAGS+=-Wl,--shared-memory
 
-RAW_LDFLAGS+=--extra-features=atomics
-RAW_LDFLAGS+=--extra-features=bulk-memory
-RAW_LDFLAGS+=--extra-features=mutable-globals
-RAW_LDFLAGS+=--export=__wasm_call_ctors
-RAW_LDFLAGS+=--export-if-defined=__wasm_apply_data_relocs
-RAW_LDFLAGS+=--experimental-pic
-RAW_LDFLAGS+=--shared-memory
-
 MAIN_LDFLAGS=$(LDFLAGS)
 MAIN_LDFLAGS+=-L$(shell pwd)
 MAIN_LDFLAGS+=-lside
@@ -52,12 +42,9 @@ MAIN_LDFLAGS+=-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lwasi-
 
 
 SIDE_LDFLAGS=$(LDFLAGS)
+SIDE_LDFLAGS+=--no-standard-libraries -nostdlib++ -Wl,--no-entry
 SIDE_LDFLAGS+=-Wl,--unresolved-symbols=import-dynamic
-SIDE_LDFLAGS+=-shared
-
-SIDE_RAW_LDFLAGS=$(RAW_LDFLAGS)
-SIDE_RAW_LDFLAGS+=--unresolved-symbols=import-dynamic
-SIDE_RAW_LDFLAGS+=-shared
+SIDE_LDFLAGS+=--shared
 
 %.o: %.c Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -66,10 +53,7 @@ SIDE_RAW_LDFLAGS+=-shared
 	$(LD) $(MAIN_LDFLAGS) -o $@ $<
 
 lib%.so: %.o Makefile
-	$(RAW_LD) $(SIDE_RAW_LDFLAGS) -o $@ $<
-
-# lib%.so: %.o Makefile
-# 	$(LD) $(SIDE_LDFLAGS) -o $@ $<
+	$(LD) $(SIDE_LDFLAGS) -o $@ $<
 
 clean:
 	rm -f *.o *.wasm *.log *.a *.so
