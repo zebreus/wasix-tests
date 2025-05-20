@@ -1,0 +1,5 @@
+# extern-threadlocal
+
+This one is currently failing. When not using a threadlocal for `erryes` this works (See `extern-variable`). This is a relevant test because `errno` is implemented using an extern thread_local variable.
+
+NOTE: This one starts working when using C's `_Thread_local` instead of C++'s `thread_local`. I have no idea how C implements this and if it even does the correct thing. This needs further investigation.
