@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
       - name: Install WASIX toolchain
@@ -16,4 +19,35 @@ jobs:
         run: |
           export WASIX_SYSROOT=/wasix-sysroot
           export TERM=xterm-256color
-          bash test.sh
+          bash test.sh | tee test.log
+      - name: Summarize test results
+        run: |
+          grep -E "^Test .* (passed|failed)" test.log > summary.txt || true
+          pass_count=$(grep -c '^Test .* passed' summary.txt || true)
+          fail_count=$(grep -c '^Test .* failed' summary.txt || true)
+          total=$((pass_count + fail_count))
+          {
+            echo '### Test Results';
+            cat summary.txt;
+            echo;
+            echo '| Total | Passed | Failed |';
+            echo '|------:|------:|------:|';
+            echo "| $total | $pass_count | $fail_count |";
+          } >> "$GITHUB_STEP_SUMMARY"
+          cat <<EOF > pr_comment.txt
+| Total | Passed | Failed |
+|------:|------:|------:|
+| $total | $pass_count | $fail_count |
+EOF
+      - name: Post results to PR
+        uses: EliLillyCo/github-actions-post-to-pr@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          post_to_pr_definition: |
+            [
+              {
+                "message_file": "./pr_comment.txt",
+                "title": "Test Results",
+                "collapsible": true
+              }
+            ]
