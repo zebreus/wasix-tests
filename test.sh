@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+source ./lib/assert.sh
 cd "$(dirname "$0")"
 
 # Ensure tput based color output works even in non-interactive environments
@@ -8,8 +9,12 @@ export WASIX_SYSROOT="${WASIX_SYSROOT:-/wasix-sysroot}"
 
 disabled_tests=("minimal-threadlocal" "extern-threadlocal-nopic")
 
+passed=0
+failed=0
+declare -a failed_tests
+declare -a failed_logs
+
 for tool in wasix emscripten; do
-    echo "### Running $tool tests"
     export PATH="$(pwd)/scripts:$PATH"
     export CC="${tool}-clang" CXX="${tool}-clang++" LD="${tool}-clang"
 
@@ -18,18 +23,26 @@ for tool in wasix emscripten; do
         testname=$(basename "$testdir")
 
         if [[ " ${disabled_tests[@]} " =~ " ${testname} " ]]; then
-            echo "Skipping disabled test: $testname ($tool)"
             continue
         fi
 
-        echo "Running test: $testname ($tool)"
-
-        if bash "$testfile"; then
-            echo "Test $testname passed."
+        if output=$(bash "$testfile" 2>&1); then
+            ((passed+=1))
         else
-            echo "Test $testname failed."
+            ((failed+=1))
+            failed_tests+=("$testname ($tool)")
+            failed_logs+=("$output")
         fi
-        echo "--------------------------------"
     done
 done
+
+if [[ $failed -eq 0 ]]; then
+    echo -e "${GREEN}✅ ${passed} tests passed${NORMAL}"
+else
+    echo -e "${GREEN}✅ ${passed} passed${NORMAL} | ${RED}❌ ${failed} failed${NORMAL}"
+    for i in "${!failed_tests[@]}"; do
+        echo -e "${BOLD}${MAGENTA}--- ${failed_tests[i]} ---${NORMAL}"
+        echo "${failed_logs[i]}"
+    done
+fi
 
