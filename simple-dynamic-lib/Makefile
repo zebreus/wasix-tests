@@ -35,7 +35,7 @@ MAIN_LDFLAGS+=-Wl,--import-memory
 MAIN_LDFLAGS+=-Wl,-pie
 MAIN_LDFLAGS+=-Wl,--export-all
 # Export all libc symbols
-LDFLAGS+=-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
+MAIN_LDFLAGS+=-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
 
 
 
