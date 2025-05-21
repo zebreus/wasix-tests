@@ -16,4 +16,33 @@ jobs:
         run: |
           export WASIX_SYSROOT=/wasix-sysroot
           export TERM=xterm-256color
-          bash test.sh
+          bash test.sh | tee output.txt
+      - name: Summarize test results
+        id: summary
+        run: |
+          grep -E "^Test .* (passed|failed)" output.txt > summary.txt || true
+          total=$(grep -c "^Test" summary.txt || echo 0)
+          passed=$(grep -c "passed" summary.txt || echo 0)
+          failed=$(grep -c "failed" summary.txt || echo 0)
+          echo "total=$total" >> "$GITHUB_OUTPUT"
+          echo "passed=$passed" >> "$GITHUB_OUTPUT"
+          echo "failed=$failed" >> "$GITHUB_OUTPUT"
+          {
+            echo '| Total | Passed | Failed |';
+            echo '|-------|-------|-------|';
+            echo "| $total | $passed | $failed |";
+            echo '';
+            cat summary.txt;
+          } > pr-summary.txt
+          cat pr-summary.txt >> "$GITHUB_STEP_SUMMARY"
+      - name: Post summary to PR
+        uses: EliLillyCo/github-actions-post-to-pr@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          post_to_pr_definition: |
+            [
+              {
+                "message_file": "./pr-summary.txt",
+                "title": "Test Results"
+              }
+            ]
