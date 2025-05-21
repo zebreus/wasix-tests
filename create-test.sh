@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+set -e
 
-# This script is used to create a test directory for the given test name. Copies from helloworld and takes a new name as first parameter.
+# This script is used to create a test directory for the given test name.
+# Copies from helloworld and takes a new name as first parameter.
 
 # Check if test name is provided
 if [ $# -eq 0 ]; then
@@ -30,8 +32,9 @@ fi
 echo "Creating test directory: $TEST_NAME"
 cp -r "$TEMPLATE_DIR" "$DEST_DIR"
 
-# Replace occurrences of "helloworld" with the new test name in key files
+# Replace occurrences of \"helloworld\" with the new test name in key files
 find "$DEST_DIR" -type f \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "Makefile" -o -name "*.toml" \) -exec sed -i "s/helloworld/$TEST_NAME/g" {} \;
 mv "$DEST_DIR/helloworld.c" "$DEST_DIR/$TEST_NAME.c"
 
 echo "Test directory '$TEST_NAME' created successfully."
+

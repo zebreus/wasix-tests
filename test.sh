@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -e
+cd "$(dirname "$0")"
 
 for testfile in ./*/test.sh; do
     testdir=$(dirname "$testfile")
@@ -12,3 +14,4 @@ for testfile in ./*/test.sh; do
     fi
     echo "--------------------------------"
 done
+

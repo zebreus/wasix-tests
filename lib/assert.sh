@@ -20,11 +20,11 @@
 #####################################################################
 
 if command -v tput &>/dev/null && tty -s; then
-  RED=$(tput setaf 1)
-  GREEN=$(tput setaf 2)
-  MAGENTA=$(tput setaf 5)
-  NORMAL=$(tput sgr0)
-  BOLD=$(tput bold)
+  RED=$(tput setaf 1 2>/dev/null || echo -en "\e[31m")
+  GREEN=$(tput setaf 2 2>/dev/null || echo -en "\e[32m")
+  MAGENTA=$(tput setaf 5 2>/dev/null || echo -en "\e[35m")
+  NORMAL=$(tput sgr0 2>/dev/null || echo -en "\e[00m")
+  BOLD=$(tput bold 2>/dev/null || echo -en "\e[01m")
 else
   RED=$(echo -en "\e[31m")
   GREEN=$(echo -en "\e[32m")

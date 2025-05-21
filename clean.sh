@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -e
+cd "$(dirname "$0")"
 
 for makefile in ./*/Makefile; do
     makedir=$(dirname "$makefile")
@@ -6,3 +8,4 @@ for makefile in ./*/Makefile; do
     make -C "$makedir" clean || true
     echo "--------------------------------"
 done
+

@@ -7,8 +7,15 @@ Please update this file with detailed instructions for everything, that will aff
 TODO: Write instructions on how to inspect generated wasm (For example with `wasm-tools print FILE | head -n30`)
 TODO: Improve this file
 
+All test scripts source `../lib/test-utils.sh` which provides `build_targets` and
+`run_wasm` helper functions.
+
+If `tput` fails while sourcing `lib/assert.sh` (e.g. because `$TERM` is unset),
+export `TERM=xterm` before running the tests.
+
 ## Notes
 
 Tests that are currently broken:
 - `minimal-threadlocal`
 - `extern-threadlocal-nopic`
+
