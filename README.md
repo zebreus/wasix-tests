@@ -1,20 +1,26 @@
 # wasix-tests
-Some test cases that worked on my machine
+
+Collection of small C/C++ test cases for the [WASIX](https://github.com/wasix-org) toolchain.
+Each test lives in its own directory with a `Makefile` and a `test.sh` script.
+
+## Requirements
+
+* `clang-19` and `clang++-19`
+* a WASIX sysroot – set the `WASIX_SYSROOT` environment variable to its path
+* [`wasmer`](https://github.com/wasmerio/wasmer) (override with `WASMER` env var)
+* `wasm-tools` or `wabt` (optional, for inspecting generated modules)
 
 ## Running tests
 
-Before running tests, ensure that the environment variable `WASIX_SYSROOT` is set
-to the path of your WASIX installation. The Makefiles rely on this variable to
-find the correct sysroot. Once set, run the tests with:
+1. Ensure `WASIX_SYSROOT` points to your WASIX installation.
+2. Execute `bash test.sh` in the repository root.  The script iterates over all
+   subdirectories and invokes their individual `test.sh` files.
+3. Use `bash clean.sh` to remove build artefacts.
 
-```bash
-bash test.sh
-```
+You may also run the `test.sh` inside a specific test directory to build and run
+just that test.
 
 ## Adding tests
 
-Before creating a new test, export `WASIX_SYSROOT` as described above and then run:
-
-```bash
-bash create-test.sh
-```
+Run `bash create-test.sh <new-test-name>` to create a new test directory based on
+the `helloworld` example.  Adjust the generated files as necessary.
