@@ -15,13 +15,13 @@ cargo binstall -y wasm-tools
 sudo apt update > /dev/null
 sudo apt install -y clang-19 llvm-19 llvm-19-dev emscripten nodejs binaryen wabt libpolly-19-dev lld-19 pkg-config libtool unzip  > /dev/null
 
-wget http://0x0.st/8wwU.zip > /dev/null
+wget -q http://0x0.st/8wwU.zip > /dev/null
 unzip 8wwU.zip > /dev/null
 chmod a+x wasmer
 sudo mv wasmer /usr/bin/wasmer
 rm 8wwU.zip
 
-wget http://0x0.st/8ww5.zip > /dev/null
+wget -q http://0x0.st/8ww5.zip > /dev/null
 unzip 8ww5.zip > /dev/null
 sudo mv sysroot /wasix-sysroot
 rm 8ww5.zip
