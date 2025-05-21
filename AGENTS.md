@@ -1,6 +1,15 @@
 # some testcases for wasix
 
-Before working on this repo, verify that you can execute the tests. Run `bash test.sh` in the root directory.  The individual test directories contain Makefiles that expect **clang‑19** and **clang++‑19** and a working WASIX sysroot.  Set the environment variable `WASIX_SYSROOT` to the sysroot path of your WASIX installation before invoking any Makefiles.  Without it the builds will fail.
+Before working on this repo, verify that you can execute the tests. Run `bash test.sh` in the root directory.  The individual test directories expect a WASIX sysroot and the compiler wrappers found in `scripts/`.  Set `WASIX_SYSROOT` accordingly and prepend the `scripts/` directory to your `PATH`:
+
+```bash
+export WASIX_SYSROOT=/wasix-sysroot
+export PATH="$(pwd)/scripts:$PATH"
+# choose which toolchain to test
+export CC=wasix-clang CXX=wasix-clang++ LD=wasix-clang
+```
+
+Use `emscripten-clang`/`emscripten-clang++` for Emscripten builds.
 
 All tests are executed with `wasmer` by default.  You can override the binary by setting the `WASMER` environment variable.
 
