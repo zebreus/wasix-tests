@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install WASIX toolchain
+        run: |
+          bash scripts/setup-wasix.sh
+      - name: Run tests
+        run: |
+          export WASIX_SYSROOT=/wasix-sysroot
+          export TERM=xterm-256color
+          bash test.sh
