@@ -16,4 +16,11 @@ jobs:
         run: |
           export WASIX_SYSROOT=/wasix-sysroot
           export TERM=xterm-256color
-          bash test.sh
+          bash test.sh | tee test.log
+      - name: Summarize test results
+        run: |
+          grep -E "^Test .* (passed|failed)" test.log > summary.txt || true
+          {
+            echo '### Test Results';
+            cat summary.txt;
+          } >> "$GITHUB_STEP_SUMMARY"
