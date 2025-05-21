@@ -3,6 +3,12 @@ set -euo pipefail
 
 # Install tooling required for building and testing WASIX programs
 
+# If the sysroot already exists we assume the toolchain is installed.
+if [ -d "/wasix-sysroot" ]; then
+    echo "WASIX sysroot already installed at /wasix-sysroot, skipping setup."
+    exit 0
+fi
+
 curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
 cargo binstall -y wasm-tools
 
