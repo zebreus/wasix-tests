@@ -12,3 +12,12 @@ TODO: Improve this file
 Tests that are currently broken:
 - `minimal-threadlocal`
 - `extern-threadlocal-nopic`
+
+## CI notes
+
+This repository now includes a GitHub Actions workflow located at
+`.github/workflows/ci.yml`. The workflow installs a WASIX toolchain and runs
+`bash test.sh`. It executes automatically on every pull request targeting the
+`main` branch. If the build infrastructure changes or additional environment
+variables become necessary, document the changes here so the CI remains
+reliable.

@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-19 clang++-19 lld-19 make curl wget
+          curl https://get.wasmer.io -sSfL | sh
+          echo "$HOME/.wasmer/bin" >> $GITHUB_PATH
+          wget -q https://github.com/wasix-org/wasix/releases/latest/download/wasix-sdk-x86_64-linux.tar.xz
+          mkdir -p /opt/wasix-sdk
+          sudo tar -C /opt/wasix-sdk --strip-components=1 -xf wasix-sdk-x86_64-linux.tar.xz
+          echo "WASIX_SYSROOT=/opt/wasix-sdk" >> $GITHUB_ENV
+      - name: Run tests
+        run: bash test.sh
