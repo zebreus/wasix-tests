@@ -53,9 +53,11 @@ export `TERM=xterm` before running the tests.
 available.  Once a valid sysroot is provided via `WASIX_SYSROOT` the tests
 should build and run (with the exceptions listed below).
 
-Tests that are currently broken:
+Tests that are currently disabled because they fail:
 - `minimal-threadlocal`
 - `extern-threadlocal-nopic`
+
+The top-level `test.sh` script skips these tests.
 
 ## CI notes
 
