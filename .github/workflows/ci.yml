@@ -22,10 +22,16 @@ jobs:
           bash test.sh | tee test.log
       - name: Summarize test results
         run: |
-          grep -E "^Test .* (passed|failed)" test.log > summary.txt || true
-          pass_count=$(grep -c '^Test .* passed' summary.txt || true)
-          fail_count=$(grep -c '^Test .* failed' summary.txt || true)
+          summary=$(head -n 1 test.log | sed -r 's/\x1b\[[0-9;]*m//g')
+          if echo "$summary" | grep -q 'failed'; then
+            pass_count=$(echo "$summary" | grep -o '[0-9]\+' | head -n1)
+            fail_count=$(echo "$summary" | grep -o '[0-9]\+' | sed -n '2p')
+          else
+            pass_count=$(echo "$summary" | grep -o '[0-9]\+' | head -n1)
+            fail_count=0
+          fi
           total=$((pass_count + fail_count))
+          echo "$summary" > summary.txt
           {
             echo '### Test Results';
             cat summary.txt;
