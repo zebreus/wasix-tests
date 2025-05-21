@@ -6,7 +6,7 @@ source ../lib/assert.sh
 make libside.so
 make main.wasm
 
-if wasmer run --mapdir /lib:$(pwd) main.wasm > stdout.log 2> stderr.log ; then : ; else
+if ${WASMER:-wasmer} run --mapdir /lib:$(pwd) main.wasm > stdout.log 2> stderr.log ; then : ; else
     assert_eq 0 $? "wasmer run failed: $(cat stderr.log)"
 fi
 
