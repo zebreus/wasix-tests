@@ -7,6 +7,10 @@ All tests are executed with `wasmer` by default.  You can override the binary by
 Below is a list of tests that are currently known to be broken.  Fixing them most likely involves changes in `wasix-libc` or `wasmer`, which is out of scope for this repository.  If you notice that a broken test starts passing (or a new test breaks) please update this file.  Also update this file if you change the repository structure or the build infrastructure.
 
 Please update this file with detailed instructions for everything that will affect the next agent or human.
+## Testing policy
+
+Always run `bash test.sh` after modifying any files.
+Document the results in your pull request description. If tests fail because required tooling is missing, note this but still attempt to run them.
 
 ### Inspecting generated WebAssembly
 
