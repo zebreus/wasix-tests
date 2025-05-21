@@ -21,6 +21,13 @@ wasm-tools print FILE | head -n 30
 
 TODO: Improve this file
 
+### Debugging failing tests
+
+If you encounter a failing test and need guidance on how to debug it, see
+`docs/debugging-tests.md` for a walkthrough. The document explains how to run
+individual test suites, increase build verbosity, and inspect generated
+WebAssembly files.
+
 All test scripts source `../lib/test-utils.sh` which provides `build_targets` and
 `run_wasm` helper functions.
 
