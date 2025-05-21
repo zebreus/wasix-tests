@@ -52,4 +52,24 @@ if ! $add_libs; then
     ARGS=("${ARGS[@]/-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive}")
 fi
 
+# Remove linker flags when compiling only
+compile_only=false
+for arg in "$@"; do
+    case "$arg" in
+        -c|-S|-E)
+            compile_only=true
+            ;;
+    esac
+done
+
+if $compile_only; then
+    new_args=()
+    for arg in "${ARGS[@]}"; do
+        if [[ $arg != -Wl,* ]]; then
+            new_args+=("$arg")
+        fi
+    done
+    ARGS=("${new_args[@]}")
+fi
+
 exec clang-19 "${ARGS[@]}" "$@"
