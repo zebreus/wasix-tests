@@ -34,24 +34,13 @@ LDFLAGS+=-Wl,--export=__wasm_call_ctors
 LDFLAGS+=-Wl,--extra-features=atomics
 LDFLAGS+=-Wl,--extra-features=bulk-memory
 LDFLAGS+=-Wl,--extra-features=mutable-globals
-LDFLAGS+=-Wl,--whole-archive
-LDFLAGS+=-Wl,-lc
-LDFLAGS+=-Wl,-lutil
-LDFLAGS+=-Wl,-lresolv
-LDFLAGS+=-Wl,-lrt
-LDFLAGS+=-Wl,-lm
-LDFLAGS+=-Wl,-lpthread
-LDFLAGS+=-Wl,-lwasi-emulated-mman
-LDFLAGS+=-Wl,-lwasi-emulated-getpid
 LDFLAGS+=-Wl,--export-all
-LDFLAGS+=-Wl,--no-whole-archive
-LDFLAGS+=-Wl,-lc++
-LDFLAGS+=-Wl,-lc++abi
+LDFLAGS+=-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
 
 %.o: %.c Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
-helloworld.wasm: helloworld.o Makefile
+%.wasm: %.o Makefile
 	$(LD) $(LDFLAGS) -o $@ $<
 
 clean:

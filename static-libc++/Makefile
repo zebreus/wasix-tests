@@ -16,31 +16,32 @@ CFLAGS+=-matomics -mbulk-memory -mmutable-globals
 CFLAGS+= -pthread -mthread-model posix -ftls-model=local-exec
 CFLAGS+= -fno-trapping-math -D_WASI_EMULATED_MMAN -D_WASI_EMULATED_SIGNAL
 CFLAGS+= -D_WASI_EMULATED_PROCESS_CLOCKS
+CFLAGS+= -fvisibility=default
 CFLAGS+= -fPIC
 
 LDFLAGS=""
 LDFLAGS+=--target=wasm32-wasi
 LDFLAGS+=--sysroot="${WASIX_SYSROOT}"
-LDFLAGS+=-Wl,--extra-features=atomics,--extra-features=bulk-memory,--extra-features=mutable-globals
-LDFLAGS+=-Wl,--export-if-defined=__wasm_apply_data_relocs
-LDFLAGS+=-Wl,--export=__wasm_call_ctors
 LDFLAGS+=-Wl,--experimental-pic
+LDFLAGS+=-Wl,-pie
+LDFLAGS+=-Wl,--import-memory
 LDFLAGS+=-Wl,--import-memory
 LDFLAGS+=-Wl,--shared-memory
-LDFLAGS+=-Wl,-pie
-LDFLAGS+=-Wl,--export-all
-# Export all libc symbols
+LDFLAGS+=-Wl,--export-if-defined=__wasm_apply_data_relocs
+LDFLAGS+=-Wl,--export-if-defined=_ZTH5errno
+LDFLAGS+=-Wl,--export-if-defined=__cxa_thread_atexit_impl
+LDFLAGS+=-Wl,--export=__wasm_call_ctors
+LDFLAGS+=-Wl,--extra-features=atomics
+LDFLAGS+=-Wl,--extra-features=bulk-memory
+LDFLAGS+=-Wl,--extra-features=mutable-globals
 LDFLAGS+=-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
-
+LDFLAGS+=-Wl,--export-all
 
 %.o: %.cpp Makefile
 	$(CXX) $(CFLAGS) -c $< -o $@
 
-main.wasm: main.o erryes.o Makefile
-	$(LD) $(LDFLAGS) -o $@ main.o erryes.o
-
-run: main.wasm
-	$(WASMER) run main.wasm
+%.wasm: %.o Makefile
+	$(LD) $(LDFLAGS) -o $@ $<
 
 clean:
 	rm -f *.o *.wasm *.log *.a *.so

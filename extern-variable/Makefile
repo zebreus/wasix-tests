@@ -30,9 +30,7 @@ LDFLAGS+=-Wl,--shared-memory
 LDFLAGS+=-Wl,-pie
 LDFLAGS+=-Wl,--export-all
 # Export all libc symbols
-MAIN_LDFLAGS+=-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
-LDFLAGS+=-Wl,-lc++
-LDFLAGS+=-Wl,-lc++abi
+MAIN_LDFLAGS+=-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lc++,-lc++abi,-lpthread,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
 
 %.o: %.cpp Makefile
 	$(CXX) $(CFLAGS) -c $< -o $@
