@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -z "${WASIX_SYSROOT:-}" ]; then
+    echo "WASIX_SYSROOT environment variable not set" >&2
+    exit 1
+fi
+
+COMMON_ARGS=(
+    --target=wasm32-wasi
+    --sysroot="${WASIX_SYSROOT}"
+    -matomics -mbulk-memory -mmutable-globals
+    -pthread -mthread-model posix -ftls-model=local-exec
+    -fno-trapping-math
+    -D_WASI_EMULATED_MMAN -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS
+    -fvisibility=default -fPIC
+)
+
+LINK_ARGS=(
+    -Wl,--experimental-pic
+    -Wl,--import-memory
+    -Wl,--shared-memory
+    -Wl,--export-if-defined=__wasm_apply_data_relocs
+    -Wl,--export-if-defined=_ZTH5errno
+    -Wl,--export-if-defined=__cxa_thread_atexit_impl
+    -Wl,--export=__wasm_call_ctors
+    -Wl,--extra-features=atomics
+    -Wl,--extra-features=bulk-memory
+    -Wl,--extra-features=mutable-globals
+    -Wl,--export-all
+)
+
+shared=false
+skip_libs=false
+linking=true
+
+for arg in "$@"; do
+    case "$arg" in
+        -c|-S|-E|-M|-MM|-MD|-MMD)
+            linking=false;;
+        -shared)
+            shared=true;;
+        --no-standard-libraries|-nostdlib|-nostdlib++|-nodefaultlibs)
+            skip_libs=true;;
+    esac
+done
+
+if [[ $linking == true ]]; then
+    if [[ $shared == false ]]; then
+        LINK_ARGS+=(-Wl,-pie)
+    fi
+    if [[ $skip_libs == false ]]; then
+        LINK_ARGS+=(
+            -Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
+        )
+    fi
+fi
+
+exec clang++-19 "${COMMON_ARGS[@]}" "${LINK_ARGS[@]}" "$@"
