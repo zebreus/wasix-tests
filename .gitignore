@@ -2,3 +2,4 @@
 *.so
 *.wasm
 *.log
+*.js
