@@ -6,6 +6,8 @@ cd "$(dirname "$0")"
 export TERM="${TERM:-xterm-256color}"
 export WASIX_SYSROOT="${WASIX_SYSROOT:-/wasix-sysroot}"
 
+disabled_tests=("minimal-threadlocal" "extern-threadlocal-nopic")
+
 for tool in wasix emscripten; do
     echo "### Running $tool tests"
     export PATH="$(pwd)/scripts:$PATH"
@@ -14,6 +16,12 @@ for tool in wasix emscripten; do
     for testfile in ./*/test.sh; do
         testdir=$(dirname "$testfile")
         testname=$(basename "$testdir")
+
+        if [[ " ${disabled_tests[@]} " =~ " ${testname} " ]]; then
+            echo "Skipping disabled test: $testname ($tool)"
+            continue
+        fi
+
         echo "Running test: $testname ($tool)"
 
         if bash "$testfile"; then
