@@ -1,5 +1,5 @@
 # wasix-tests
-Some testcases that worked on my machine
+Some test cases that worked on my machine
 
 ## Running tests
 
