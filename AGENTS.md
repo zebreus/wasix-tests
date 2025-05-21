@@ -21,6 +21,12 @@ wasm-tools print FILE | head -n 30
 
 TODO: Improve this file
 
+All test scripts source `../lib/test-utils.sh` which provides `build_targets` and
+`run_wasm` helper functions.
+
+If `tput` fails while sourcing `lib/assert.sh` (e.g. because `$TERM` is unset),
+export `TERM=xterm` before running the tests.
+
 ## Notes
 
 `bash test.sh` currently fails in this environment because no WASIX sysroot is

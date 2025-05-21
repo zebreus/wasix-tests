@@ -18,12 +18,16 @@ Run `bash scripts/setup-wasix.sh` once to install the toolchain, then execute
 Alternatively:
 
 1. Ensure `WASIX_SYSROOT` points to your WASIX installation.
-2. Execute `bash test.sh` in the repository root.  The script iterates over all
+2. If `tput` errors appear when running the tests, export `TERM=xterm` to provide
+   a basic terminal description.
+3. Execute `bash test.sh` in the repository root.  The script iterates over all
    subdirectories and invokes their individual `test.sh` files.
 3. Use `bash clean.sh` to remove build artefacts.
 
 You may also run the `test.sh` inside a specific test directory to build and run
 just that test.
+
+
 
 ## Adding tests
 

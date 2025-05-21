@@ -2,13 +2,11 @@
 set -e
 cd "$(dirname "$0")"
 source ../lib/assert.sh
+source ../lib/test-utils.sh
 
-make libside.so
-make main.wasm
-
-if ${WASMER:-wasmer} run --mapdir /lib:$(pwd) main.wasm > stdout.log 2> stderr.log ; then : ; else
-    assert_eq 0 $? "wasmer run failed: $(cat stderr.log)"
-fi
+build_targets libside.so main.wasm
+run_wasm main.wasm
 
 assert_eq "The dynamic library returned: 42" "$(cat stdout.log)" "stdout did not match expected value"
 assert_eq "" "$(cat stderr.log)" "stderr did not match expected value"
+
