@@ -21,8 +21,8 @@ cd emsdk
 ./emsdk activate 3.1.69
 source "$(pwd)/emsdk_env.sh"
 echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.bash_profile
-echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.bashrc
-echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.profile
+# echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.bashrc
+# echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.profile
 if test -n "${GITHUB_PATH:-}" ; then
   echo "$(pwd)" >> $GITHUB_PATH
   echo "$(pwd)/upstream/emscripten" >> $GITHUB_PATH
