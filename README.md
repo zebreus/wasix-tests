@@ -2,6 +2,7 @@
 
 Collection of small C/C++ test cases for the [WASIX](https://github.com/wasix-org) toolchain.
 Each test lives in its own directory with a `Makefile` and a `test.sh` script.
+The `mmap-anon` test demonstrates anonymous memory mapping using `mmap`.
 
 ## Requirements
 
