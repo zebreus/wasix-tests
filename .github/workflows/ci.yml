@@ -19,38 +19,26 @@ jobs:
       - name: Run tests
         run: |
           export WASIX_SYSROOT=/wasix-sysroot
+          export WASMER=/usr/bin/wasmer
           export TERM=xterm-256color
           bash test.sh | tee test.log
       - name: Summarize test results
         run: |
-          summary=$(head -n 1 test.log | sed -r 's/\x1b\[[0-9;]*m//g')
-          numbers=($(echo "$summary" | grep -oE '[0-9]+'))
-          pass_count=${numbers[0]:-0}
-          fail_count=${numbers[1]:-0}
-          total=$((pass_count + fail_count))
-          echo "$summary" > summary.txt
-          {
-            echo '### Test Results';
-            cat summary.txt;
-            echo;
-            echo '| Total | Passed | Failed |';
-            echo '|------:|------:|------:|';
-            echo "| $total | $pass_count | $fail_count |";
-          } >> "$GITHUB_STEP_SUMMARY"
-          cat <<EOF > pr_comment.txt
-| Total | Passed | Failed |
-|------:|------:|------:|
-| $total | $pass_count | $fail_count |
-EOF
-      - name: Post results to PR
-        uses: EliLillyCo/github-actions-post-to-pr@main
+          bash lib/summarize-test-results-for-ci.sh
+      - name: Post test results to PR
+        uses: actions/github-script@v7
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          post_to_pr_definition: |
-            [
-              {
-                "message_file": "./pr_comment.txt",
-                "title": "Test Results",
-                "collapsible": true
-              }
-            ]
+          script: |
+            const fs = require('fs');
+            const path = './pr_comment.txt';
+            if (!fs.existsSync(path)) {
+              core.setFailed('Comment file not found');
+              return;
+            }
+            const content = fs.readFileSync(path, 'utf8');
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: content
+            });
