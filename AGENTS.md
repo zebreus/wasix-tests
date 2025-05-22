@@ -38,7 +38,7 @@ TODO: Improve this file
 ### Debugging failing tests
 
 If you encounter a failing test and need guidance on how to debug it, see
-`docs/debugging-tests.md` for a walkthrough. The document explains how to run
+`./debugging-tests.md` for a walkthrough. The document explains how to run
 individual test suites, increase build verbosity, and inspect generated
 WebAssembly files.
 
