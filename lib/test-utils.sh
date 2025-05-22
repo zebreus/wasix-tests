@@ -7,8 +7,13 @@ run() {
     RUNNER=${RUNNER:-../lib/wrappers/native-clang-runner}
     local executable="$1"
     shift
-    if ! $RUNNER "./$executable" "$@" > stdout.log 2> stderr.log; then
-        assert_eq 0 "$?" "run failed: $(cat stderr.log)"
+
+    $RUNNER "./$executable" "$@" > stdout.log 2> stderr.log
+    local status=$?
+
+    if [ "$status" -ne 0 ]; then
+        assert_eq 0 "$status" "run failed: $(cat stderr.log)"
+        return "$status"
     fi
     set +x
 }
