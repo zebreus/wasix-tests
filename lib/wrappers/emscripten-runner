@@ -2,8 +2,8 @@
 set -euo pipefail
 
 RUNNER="${NODEJS:-node}"
-if ! which "$RUNNER" &>/dev/null; then
-    echo "Node.js not found. Please add node to your PATH or set the 'NODEJS' environment variable."
+if ! command -v "$RUNNER" &>/dev/null; then
+    echo "Node.js not found. Please add node to your PATH or set the 'NODEJS' environment variable." >&2
     exit 1
 fi
 
