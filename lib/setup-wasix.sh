@@ -13,7 +13,22 @@ curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-
 cargo binstall -y wasm-tools
 
 sudo apt update > /dev/null
-sudo apt install -y clang-19 llvm-19 llvm-19-dev emscripten nodejs binaryen wabt libpolly-19-dev lld-19 pkg-config libtool unzip  > /dev/null
+sudo apt install -y clang-19 llvm-19 llvm-19-dev nodejs binaryen wabt libpolly-19-dev lld-19 pkg-config libtool unzip  > /dev/null
+
+git clone --depth=1 https://github.com/emscripten-core/emsdk.git > /dev/null
+cd emsdk
+./emsdk install 3.1.69 > /dev/null
+./emsdk activate 3.1.69
+source "$(pwd)/emsdk_env.sh"
+echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.bash_profile
+echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.bashrc
+echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.profile
+if test -n "${GITHUB_PATH:-}" ; then
+  echo "$(pwd)" >> $GITHUB_PATH
+  echo "$(pwd)/upstream/emscripten" >> $GITHUB_PATH
+fi
+
+cd ..
 
 wget -q http://0x0.st/8wwU.zip > /dev/null
 unzip 8wwU.zip > /dev/null
