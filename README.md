@@ -15,7 +15,7 @@ Each test lives in its own directory with a `Makefile` and a `test.sh` script.
 
 Run `bash lib/setup-wasix.sh` once to install the toolchain, then execute
 `bash test.sh`. Ensure `WASIX_SYSROOT=/wasix-sysroot` is set in the environment.
-Before running any `make` files, prepend the repository's `scripts/` directory
+Before running any `make` files, prepend the repository's `lib/wrappers/` directory
 to your `PATH` and select which wrapper to use:
 
 ```bash
@@ -29,7 +29,7 @@ For an Emscripten build use `emscripten-clang`/`emscripten-clang++` instead.
 Alternatively:
 
 1. Ensure `WASIX_SYSROOT` points to your WASIX installation.
-2. Prepend `scripts/` to `PATH` and set `CC`, `CXX`, and `LD` to the desired
+2. Prepend `lib/wrappers/` to `PATH` and set `CC`, `CXX`, and `LD` to the desired
    wrapper (`wasix-clang` or `emscripten-clang`).
 3. If `tput` errors appear when running the tests, export `TERM=xterm` to
    provide a basic terminal description.

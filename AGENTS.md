@@ -1,6 +1,6 @@
 # some testcases for wasix
 
-Before working on this repo, verify that you can execute the tests. Run `bash test.sh` in the root directory.  The individual test directories expect a WASIX sysroot and the compiler wrappers found in `scripts/`.  Set `WASIX_SYSROOT` accordingly and prepend the `scripts/` directory to your `PATH`:
+Before working on this repo, verify that you can execute the tests. Run `bash test.sh` in the root directory.  The individual test directories expect a WASIX sysroot and the compiler wrappers found in `lib/wrappers/`.  Set `WASIX_SYSROOT` accordingly and prepend the `lib/wrappers/` directory to your `PATH`:
 
 ```bash
 export WASIX_SYSROOT=/wasix-sysroot
