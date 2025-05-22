@@ -42,6 +42,7 @@ else
     for i in "${!failed_tests[@]}"; do
         echo -e "${BOLD}${MAGENTA}--- ${failed_tests[i]} ---${NORMAL}"
         echo "${failed_logs[i]}"
+        echo -e "${BOLD}${MAGENTA}--------${NORMAL}"
     done
     for i in "${!failed_tests[@]}"; do
         echo -e "${BOLD}${RED}failed: ${failed_tests[i]}${NORMAL}"

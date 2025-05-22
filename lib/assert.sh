@@ -19,18 +19,25 @@
 ##
 #####################################################################
 
-if command -v tput &>/dev/null && tty -s; then
-  RED=$(tput setaf 1 2>/dev/null || echo -en "\e[31m")
-  GREEN=$(tput setaf 2 2>/dev/null || echo -en "\e[32m")
-  MAGENTA=$(tput setaf 5 2>/dev/null || echo -en "\e[35m")
-  NORMAL=$(tput sgr0 2>/dev/null || echo -en "\e[00m")
-  BOLD=$(tput bold 2>/dev/null || echo -en "\e[01m")
-else
-  RED=$(echo -en "\e[31m")
-  GREEN=$(echo -en "\e[32m")
-  MAGENTA=$(echo -en "\e[35m")
-  NORMAL=$(echo -en "\e[00m")
-  BOLD=$(echo -en "\e[01m")
+RED=
+GREEN=
+MAGENTA=
+NORMAL=
+BOLD=
+if test -t 1 ; then
+  if command -v tput &>/dev/null && tty -s; then
+    RED=$(tput setaf 1 2>/dev/null || echo -en "\e[31m")
+    GREEN=$(tput setaf 2 2>/dev/null || echo -en "\e[32m")
+    MAGENTA=$(tput setaf 5 2>/dev/null || echo -en "\e[35m")
+    NORMAL=$(tput sgr0 2>/dev/null || echo -en "\e[00m")
+    BOLD=$(tput bold 2>/dev/null || echo -en "\e[01m")
+  else
+    RED=$(echo -en "\e[31m")
+    GREEN=$(echo -en "\e[32m")
+    MAGENTA=$(echo -en "\e[35m")
+    NORMAL=$(echo -en "\e[00m")
+    BOLD=$(echo -en "\e[01m")
+  fi
 fi
 
 log_header() {

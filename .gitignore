@@ -5,3 +5,5 @@
 *.js
 main
 .CONFIG
+summary.txt
+pr_comment.txt
