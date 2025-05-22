@@ -37,12 +37,15 @@ for tool in wasix-clang emscripten native-clang native-gcc; do
 done
 
 if [[ $failed -eq 0 ]]; then
-    echo -e "${GREEN}✅ ${passed} tests passed${NORMAL}"
+    echo -e "${GREEN}✅ ${passed} passed${NORMAL}"
 else
-    echo -e "${GREEN}✅ ${passed} passed${NORMAL} | ${RED}❌ ${failed} failed${NORMAL}"
     for i in "${!failed_tests[@]}"; do
         echo -e "${BOLD}${MAGENTA}--- ${failed_tests[i]} ---${NORMAL}"
         echo "${failed_logs[i]}"
     done
+    for i in "${!failed_tests[@]}"; do
+        echo -e "${BOLD}${RED}failed: ${failed_tests[i]}${NORMAL}"
+    done
+    echo -e "${GREEN}✅ ${passed} passed${NORMAL} | ${RED}❌ ${failed} failed${NORMAL}"
 fi
 
