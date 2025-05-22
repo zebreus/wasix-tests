@@ -38,10 +38,10 @@ jobs:
             echo "| $total | $pass_count | $fail_count |";
           } >> "$GITHUB_STEP_SUMMARY"
           cat <<EOF > pr_comment.txt
-| Total | Passed | Failed |
-|------:|------:|------:|
-| $total | $pass_count | $fail_count |
-EOF
+          | Total | Passed | Failed |
+          |------:|------:|------:|
+          | $total | $pass_count | $fail_count |
+          EOF
       - name: Post results to PR
         uses: EliLillyCo/github-actions-post-to-pr@main
         with:
