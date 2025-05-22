@@ -4,14 +4,15 @@ Before working on this repo, verify that you can execute the tests. Run `bash te
 
 ```bash
 export WASIX_SYSROOT=/wasix-sysroot
-export PATH="$(pwd)/scripts:$PATH"
+export PATH="$(pwd)/lib/wrappers:$PATH"
 # choose which toolchain to test
-export CC=wasix-clang CXX=wasix-clang++ LD=wasix-clang
+export CC=wasix-clang CXX=wasix-clang++ RUNNER=wasix-clang-runner
+export CC=native-clang CXX=native-clang++ RUNNER=native-clang-runner
+export CC=native-gcc CXX=native-gcc++ RUNNER=native-gcc-runner
+export CC=emscripten CXX=emscripten++ RUNNER=emscripten-runner
 ```
 
-Use `emscripten-clang`/`emscripten-clang++` for Emscripten builds.
-
-All tests are executed with `wasmer` by default.  You can override the binary by setting the `WASMER` environment variable.
+All tests are executed for native by default. However, the main focus is on wasix, so make sure to test everything with the `wasix-clang` wrappers as well. 
 
 Below is a list of tests that are currently known to be broken.  Fixing them most likely involves changes in `wasix-libc` or `wasmer`, which is out of scope for this repository.  If you notice that a broken test starts passing (or a new test breaks) please update this file.  Also update this file if you change the repository structure or the build infrastructure.
 
@@ -54,8 +55,6 @@ available.  Once a valid sysroot is provided via `WASIX_SYSROOT` the tests
 should build and run (with the exceptions listed below).
 
 Tests that are currently disabled because they fail:
-- `minimal-threadlocal`
-- `extern-threadlocal-nopic`
 
 The top-level `test.sh` script skips these tests.
 

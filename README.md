@@ -20,7 +20,7 @@ to your `PATH` and select which wrapper to use:
 
 ```bash
 # WASIX build
-export PATH="$(pwd)/scripts:$PATH"
+export PATH="$(pwd)/lib/wrappers:$PATH"
 export CC=wasix-clang CXX=wasix-clang++ LD=wasix-clang
 ```
 

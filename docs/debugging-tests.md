@@ -28,6 +28,17 @@ This script compiles the test using `make` and then runs the produced module wit
 If compilation fails, inspect the `*.o` and `*.wasm` files using `wasm-tools print` or
 `wasm2wat` to confirm that expected symbols are present.
 
+### Build a single test for a target
+
+By default tests are run for the native target.
+
+To run them for wasix set the appropriate environment variables.
+
+```bash
+cd helloworld
+CC=../lib/wrappers/wasix-clang CXX=../lib/wrappers/wasix-clang++ RUNNER=../lib/wrappers/wasix-clang-runner bash test.sh
+```
+
 ## 3. Increase Verbosity
 
 The Makefiles in this repository already print the compiler and linker commands
@@ -35,7 +46,7 @@ as they execute.  Passing `V=1` has no additional effect.  If you need even more
 details, you can temporarily enable shell tracing in a `test.sh` script by
 adding `set -x` near the top.
 
-## 4. Run Under a Debugger
+## 4. Run with traces
 
 `wasmer` supports `--debug` and `--invoke` flags. For the most detailed runtime
 traces, set the environment variable `WASMER_LOG=trace` before invoking the

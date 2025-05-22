@@ -15,7 +15,7 @@ declare -a failed_tests
 declare -a failed_logs
 
 for tool in wasix-clang emscripten native-clang native-gcc; do
-    export PATH="$(pwd)/scripts:$PATH"
+    export PATH="$(pwd)/lib/wrappers:$PATH"
     export CC="${tool}" CXX="${tool}++" RUNNER="${tool}-runner"
 
     for testfile in ./*/test.sh; do
