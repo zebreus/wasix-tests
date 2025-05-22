@@ -24,13 +24,13 @@ export PATH="$(pwd)/lib/wrappers:$PATH"
 export CC=wasix-clang CXX=wasix-clang++ LD=wasix-clang
 ```
 
-For an Emscripten build use `emscripten-clang`/`emscripten-clang++` instead.
+For an Emscripten build use `emscripten`/`emscripten++` instead.
 
 Alternatively:
 
 1. Ensure `WASIX_SYSROOT` points to your WASIX installation.
 2. Prepend `lib/wrappers/` to `PATH` and set `CC`, `CXX`, and `LD` to the desired
-   wrapper (`wasix-clang` or `emscripten-clang`).
+   wrapper (`wasix-clang` or `emscripten`).
 3. If `tput` errors appear when running the tests, export `TERM=xterm` to
    provide a basic terminal description.
 4. Execute `bash test.sh` in the repository root.  The script iterates over all

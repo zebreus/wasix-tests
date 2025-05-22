@@ -42,8 +42,7 @@ If you encounter a failing test and need guidance on how to debug it, see
 individual test suites, increase build verbosity, and inspect generated
 WebAssembly files.
 
-All test scripts source `../lib/test-utils.sh` which provides `build_targets` and
-`run_wasm` helper functions.
+All test scripts source `../lib/test-utils.sh`, which currently only provides the `run` helper.
 
 If `tput` fails while sourcing `lib/assert.sh` (e.g. because `$TERM` is unset),
 export `TERM=xterm` before running the tests.
