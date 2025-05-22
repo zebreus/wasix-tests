@@ -3,11 +3,9 @@ set -euo pipefail
 
 # Detect if we are clang or clang++
 if [[ "$0" =~ "++" ]]; then
-    MODE=CXX
     NATIVE_COMPILER="clang++-19"
 else
     NATIVE_COMPILER="clang-19"
-    MODE=CC
 fi
 
 if [ -z "${WASIX_SYSROOT:-}" ]; then
@@ -24,7 +22,6 @@ PASSED_ARGS=(
 run_linker=true
 # We are building a shared library
 shared_library=false
-add_libs=true
 for arg in "${PASSED_ARGS[@]}"; do
     case "$arg" in
         -c|-S|-E)
@@ -32,9 +29,6 @@ for arg in "${PASSED_ARGS[@]}"; do
             ;;
         -shared|--shared)
             shared_library=true
-            ;;
-        --no-standard-libraries)
-            add_libs=false
             ;;
     esac
 done
@@ -87,24 +81,6 @@ if $run_linker; then
 fi
 ARGS+=("${PASSED_ARGS[@]}")
 
-# if ! $add_pie; then
-#     # remove the pie flag from ARGS
-#     ARGS=("${ARGS[@]/-Wl,-pie}")
-# fi
 
-# if ! $add_libs; then
-#     ARGS=("${ARGS[@]/-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive}")
-# fi
-
-
-# if $compile_only; then
-#     new_args=()
-#     for arg in "${ARGS[@]}"; do
-#         if [[ $arg != -Wl,* ]]; then
-#             new_args+=("$arg")
-#         fi
-#     done
-#     ARGS=("${new_args[@]}")
-# fi
 
 exec ${NATIVE_COMPILER} "${ARGS[@]}"
