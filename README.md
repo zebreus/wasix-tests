@@ -35,7 +35,7 @@ Alternatively:
    provide a basic terminal description.
 4. Execute `bash test.sh` in the repository root.  The script iterates over all
    subdirectories and invokes their individual `test.sh` files.
-5. Use `bash clean.sh` to remove build artefacts.
+5. Use `bash clean.sh` to remove build artifacts.
 
 You may also run the `test.sh` inside a specific test directory to build and run
 just that test.
