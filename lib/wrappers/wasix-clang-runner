@@ -3,7 +3,7 @@ set -euo pipefail
 
 RUNNER="${WASMER:-wasmer}"
 if ! command -v "$RUNNER" &>/dev/null; then
-    echo "Wasmer not found. Please add wasmer to your PATH or set the 'WASMER' environment variable."
+    echo "Wasmer not found. Please add wasmer to your PATH or set the 'WASMER' environment variable." >&2
     exit 1
 fi
 
