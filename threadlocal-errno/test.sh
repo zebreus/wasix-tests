@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # This test should pass with both wasix-clang and native gcc/clang
-set -e
+set -euo pipefail
 cd "$(dirname "$0")"
 source ../lib/assert.sh
 source ../lib/test-utils.sh
