@@ -1,41 +1,37 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Detect if we are clang or clang++
+if [[ "$0" =~ "++" ]]; then
+    MODE=CXX
+    NATIVE_COMPILER="clang++-19"
+else
+    NATIVE_COMPILER="clang-19"
+    MODE=CC
+fi
+
 if [ -z "${WASIX_SYSROOT:-}" ]; then
     echo "WASIX_SYSROOT environment variable not set" >&2
     exit 1
 fi
 
-ARGS=(
-    --target=wasm32-wasi
-    --sysroot="${WASIX_SYSROOT}"
-    -matomics -mbulk-memory -mmutable-globals
-    -pthread -mthread-model posix -ftls-model=local-exec
-    -fno-trapping-math
-    -D_WASI_EMULATED_MMAN -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS
-    -fvisibility=default -fPIC
-    -Wl,--experimental-pic
-    -Wl,-pie
-    -Wl,--import-memory
-    -Wl,--shared-memory
-    -Wl,--export-if-defined=__wasm_apply_data_relocs
-    -Wl,--export-if-defined=_ZTH5errno
-    -Wl,--export-if-defined=__cxa_thread_atexit_impl
-    -Wl,--export=__wasm_call_ctors
-    -Wl,--extra-features=atomics
-    -Wl,--extra-features=bulk-memory
-    -Wl,--extra-features=mutable-globals
-    -Wl,--export-all
-    -Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
+PASSED_ARGS=(
+    "$@"
 )
 
-# Adjust defaults based on command line
-add_pie=true
+# Analyze the arguments
+# Check if we are also linking
+run_linker=true
+# We are building a shared library
+shared_library=false
 add_libs=true
-for arg in "$@"; do
+for arg in "${PASSED_ARGS[@]}"; do
     case "$arg" in
+        -c|-S|-E)
+            run_linker=false
+            ;;
         -shared|--shared)
-            add_pie=false
+            shared_library=true
             ;;
         --no-standard-libraries)
             add_libs=false
@@ -43,33 +39,72 @@ for arg in "$@"; do
     esac
 done
 
-if ! $add_pie; then
-    # remove the pie flag from ARGS
-    ARGS=("${ARGS[@]/-Wl,-pie}")
+COMPILER_ARGS=(
+    --target=wasm32-wasi
+    --sysroot="${WASIX_SYSROOT}"
+    -matomics -mbulk-memory -mmutable-globals
+    -pthread -mthread-model posix -ftls-model=local-exec
+    -fno-trapping-math
+    -D_WASI_EMULATED_MMAN -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS
+    -fvisibility=default
+    -fPIC
+)
+COMMON_LINKER_ARGS=(
+    -Wl,--experimental-pic
+    -Wl,--shared-memory
+    -Wl,--export-if-defined=__wasm_apply_data_relocs
+    -Wl,--export-if-defined=__cxa_thread_atexit_impl
+    -Wl,--export=__wasm_call_ctors
+    -Wl,--extra-features=atomics
+    -Wl,--extra-features=bulk-memory
+    -Wl,--extra-features=mutable-globals
+)
+LIBRARY_LINKER_ARGS=(
+    # No standard libraries, because the main executable already provides them
+    --no-standard-libraries -nostdlib++ -Wl,--no-entry
+    # Build a shared library
+    --shared
+    # Import all unresolved symbols
+    -Wl,--unresolved-symbols=import-dynamic
+)
+EXECUTABLE_LINKER_ARGS=(
+    -Wl,--import-memory
+    -Wl,-pie
+    -Wl,--export-all
+    -Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
+)
+
+ARGS=()
+ARGS+=("${COMPILER_ARGS[@]}")
+if $run_linker; then
+    ARGS+=("${COMMON_LINKER_ARGS[@]}")
+
+    if $shared_library; then
+        ARGS+=("${LIBRARY_LINKER_ARGS[@]}")
+    else
+        ARGS+=("${EXECUTABLE_LINKER_ARGS[@]}")
+    fi
 fi
+ARGS+=("${PASSED_ARGS[@]}")
 
-if ! $add_libs; then
-    ARGS=("${ARGS[@]/-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive}")
-fi
+# if ! $add_pie; then
+#     # remove the pie flag from ARGS
+#     ARGS=("${ARGS[@]/-Wl,-pie}")
+# fi
 
-# Remove linker flags when compiling only
-compile_only=false
-for arg in "$@"; do
-    case "$arg" in
-        -c|-S|-E)
-            compile_only=true
-            ;;
-    esac
-done
+# if ! $add_libs; then
+#     ARGS=("${ARGS[@]/-Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive}")
+# fi
 
-if $compile_only; then
-    new_args=()
-    for arg in "${ARGS[@]}"; do
-        if [[ $arg != -Wl,* ]]; then
-            new_args+=("$arg")
-        fi
-    done
-    ARGS=("${new_args[@]}")
-fi
 
-exec clang-19 "${ARGS[@]}" "$@"
+# if $compile_only; then
+#     new_args=()
+#     for arg in "${ARGS[@]}"; do
+#         if [[ $arg != -Wl,* ]]; then
+#             new_args+=("$arg")
+#         fi
+#     done
+#     ARGS=("${new_args[@]}")
+# fi
+
+exec ${NATIVE_COMPILER} "${ARGS[@]}"
