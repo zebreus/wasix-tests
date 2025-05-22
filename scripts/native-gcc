@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Detect if we are clang or clang++
+if [[ "$0" =~ "++" ]]; then
+    NATIVE_COMPILER="g++"
+else
+    NATIVE_COMPILER="gcc"
+fi
+
+exec "$NATIVE_COMPILER" "$@"

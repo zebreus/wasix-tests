@@ -6,7 +6,7 @@ CXX ?= clang++
 MAIN_LDFLAGS+=-L$(shell pwd)
 MAIN_LDFLAGS+=-lside
 
-SIDE_LDFLAGS+=--shared
+SIDE_LDFLAGS+=-shared
 
 all: libside.so main
 main: libside.so

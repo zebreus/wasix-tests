@@ -14,9 +14,9 @@ failed=0
 declare -a failed_tests
 declare -a failed_logs
 
-for tool in wasix emscripten; do
+for tool in wasix-clang emscripten native-clang native-gcc; do
     export PATH="$(pwd)/scripts:$PATH"
-    export CC="${tool}-clang" CXX="${tool}-clang++" LD="${tool}-clang"
+    export CC="${tool}" CXX="${tool}++" RUNNER="${tool}-runner"
 
     for testfile in ./*/test.sh; do
         testdir=$(dirname "$testfile")

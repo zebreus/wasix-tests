@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+LIB_PATH=$(dirname "$(realpath "$1")")
+
+export LD_LIBRARY_PATH="$LIB_PATH"
+exec "$@"

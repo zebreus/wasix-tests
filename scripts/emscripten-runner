@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+RUNNER="${NODEJS:-node}"
+if ! which "$RUNNER" &>/dev/null; then
+    echo "Node.js not found. Please add node to your PATH or set the 'NODEJS' environment variable."
+    exit 1
+fi
+
+exec "${RUNNER}" "$@"

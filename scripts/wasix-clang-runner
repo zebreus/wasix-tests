@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+RUNNER="${WASMER:-wasmer}"
+if ! which "$WASMER" &>/dev/null; then
+    echo "Wasmer not found. Please add wasmer to your PATH or set the 'WASMER' environment variable."
+    exit 1
+fi
+
+LIB_PATH=$(dirname "$(realpath "$1")")
+
+exec "${RUNNER}" run --mapdir /lib:"$LIB_PATH" "$@"
