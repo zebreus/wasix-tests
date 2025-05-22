@@ -3,3 +3,5 @@
 *.wasm
 *.log
 *.js
+main
+.CONFIG

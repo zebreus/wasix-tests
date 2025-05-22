@@ -1,17 +1,6 @@
+include ../lib/common.mk.inc
 
-WASMER?=wasmer
-CC ?= cc
-CXX ?= c++
-LD ?= cc
+all: main
 
-%.o: %.cpp Makefile
-	$(CXX) $(CFLAGS) -c $< -o $@
-
-main.wasm: main.o Makefile
-	$(LD) $(LDFLAGS) -o $@ main.o
-
-%.wasm: %.o Makefile
-	$(LD) $(LDFLAGS) -o $@ $<
-
-clean:
-	rm -f *.o *.wasm *.log *.a *.so
+main: main.o
+	$(CXX) main.o $(LDFLAGS) $(MAIN_LDFLAGS) -o $@
