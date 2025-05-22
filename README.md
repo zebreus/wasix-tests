@@ -42,8 +42,17 @@ You may also run the `test.sh` inside a specific test directory to build and run
 just that test.
 When contributing code, run `bash test.sh` before creating a pull request to verify that all tests still pass.
 
+## Available tests
 
-
+- extern-threadlocal-nopic
+- extern-threadlocal
+- extern-variable
+- helloworld
+- minimal-threadlocal
+- simple-dynamic-lib
+- simple-shared-lib
+- weak-symbol-undefined
+- dynamic-tls-dtor
 
 ## Adding tests
 
