@@ -8,8 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
+      repository-projects: write
     steps:
       - uses: actions/checkout@v3
       - name: Install WASIX toolchain
