@@ -13,7 +13,7 @@ Each test lives in its own directory with a `Makefile` and a `test.sh` script.
 
 ## Running tests
 
-Run `bash scripts/setup-wasix.sh` once to install the toolchain, then execute
+Run `bash lib/setup-wasix.sh` once to install the toolchain, then execute
 `bash test.sh`. Ensure `WASIX_SYSROOT=/wasix-sysroot` is set in the environment.
 Before running any `make` files, prepend the repository's `scripts/` directory
 to your `PATH` and select which wrapper to use:

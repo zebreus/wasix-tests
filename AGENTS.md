@@ -66,7 +66,7 @@ This repository now includes a GitHub Actions workflow located at
 `bash test.sh`. It executes automatically on every pull request targeting the
 `main` branch. If the build infrastructure changes or additional environment
 variables become necessary, document the changes here so the CI remains
-reliable. The toolchain installation steps are mirrored in `scripts/setup-wasix.sh`.
+reliable. The toolchain installation steps are mirrored in `lib/setup-wasix.sh`. Your environment already has an installed toolchain.
 Running this script locally prepares the environment in the same way as the CI.
 
 Tests rely on a proper terminal definition for colored output. If you run the
