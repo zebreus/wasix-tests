@@ -10,35 +10,38 @@ fi
 
 ARGS=(
     "$@"
-    "-sEXIT_RUNTIME"
+    "-fPIC"
 )
 
-# # Analyze the arguments
-# # Check if we are also linking
-# run_linker=true
-# # We are building a shared library
-# shared_library=false
-# for arg in "${PASSED_ARGS[@]}"; do
-#     case "$arg" in
-#         -c|-S|-E)
-#             run_linker=false
-#             ;;
-#         -shared|--shared)
-#             shared_library=true
-#             ;;
-#     esac
-# done
+# Analyze the arguments
+# Check if we are also linking
+run_linker=true
+# We are building a shared library
+shared_library=false
+for arg in "${ARGS[@]}"; do
+    case "$arg" in
+        -c|-S|-E)
+            run_linker=false
+            ;;
+        -shared|--shared)
+            shared_library=true
+            ;;
+    esac
+done
 
-# if $run_linker; then
-#     if $shared_library; then
-#         ARGS+=(
-#             -sSIDE_MODULE
-#         )
-#     else
-#         ARGS+=(
-#             -sMAIN_MODULE
-#         )
-#     fi
-# fi
-
+if $run_linker; then
+    ARGS+=(
+        "-sEXIT_RUNTIME"
+    )
+    if $shared_library; then
+        ARGS+=(
+            "-sSIDE_MODULE=1"
+        )
+    else
+        ARGS+=(
+            "-sMAIN_MODULE=1"
+        )
+    fi
+fi
+set -x
 exec "$NATIVE_COMPILER" "${ARGS[@]}"
