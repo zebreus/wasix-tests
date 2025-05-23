@@ -2,9 +2,6 @@ include ../lib/common.mk.inc
 
 CFLAGS+=-fPIC
 
-MAIN_LDFLAGS+=-L$(shell pwd)
-MAIN_LDFLAGS+=-lside
-
 SIDE_LDFLAGS+=-shared
 
 all: main

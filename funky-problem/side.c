@@ -4,7 +4,7 @@
 typedef void (* cool_fn_type)();
 
 void cool_fn_impl() {
-    printf("cool_fn_impl\n");
+    printf("called\n");
 }
 
 volatile cool_fn_type* keep;

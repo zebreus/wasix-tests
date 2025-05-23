@@ -1,8 +1,5 @@
 include ../lib/common.mk.inc
 
-MAIN_LDFLAGS+=-L$(shell pwd)
-MAIN_LDFLAGS+=-lside
-
 SIDE_LDFLAGS+=-shared
 
 all: main

@@ -8,6 +8,6 @@ source ../lib/test-utils.sh
 make libside.so main
 run main
 
-assert_eq ".Nothing weird happened" "$(cat stdout.log)" "stdout did not match expected value"
+assert_eq $'.Nothing weird happened' "$(cat stdout.log)" "stdout did not match expected value"
 assert_eq "" "$(cat stderr.log)" "stderr did not match expected value"
 
