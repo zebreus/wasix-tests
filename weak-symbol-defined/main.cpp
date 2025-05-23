@@ -7,10 +7,10 @@ __attribute__((__weak__)) extern int other_func();
 
 int main() {
 	if (!other_func) {
-		printf("other_func is not defined, but the program still compiled\n");
-		return 0;
+		printf("other_func is not defined\n");
+		exit(1);
 	}
 	int result = other_func();
 	printf("other_func returned %i\n",result);
-	return 0;
+	exit(0);
 }
