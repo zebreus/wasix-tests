@@ -41,6 +41,8 @@ COMPILER_ARGS=(
     -fno-trapping-math
     -D_WASI_EMULATED_MMAN -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS
     -fvisibility=default
+    -fwasm-exceptions
+    -mllvm --wasm-enable-sjlj
     -fPIC
 )
 COMMON_LINKER_ARGS=(
@@ -52,6 +54,7 @@ COMMON_LINKER_ARGS=(
     -Wl,--extra-features=atomics
     -Wl,--extra-features=bulk-memory
     -Wl,--extra-features=mutable-globals
+    -Wl,-mllvm,--wasm-enable-sjlj
 )
 LIBRARY_LINKER_ARGS=(
     # No standard libraries, because the main executable already provides them
@@ -65,7 +68,7 @@ EXECUTABLE_LINKER_ARGS=(
     -Wl,--import-memory
     -Wl,-pie
     -Wl,--export-all
-    -Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,--no-whole-archive
+    -Wl,--whole-archive,-lc,-lutil,-lresolv,-lrt,-lm,-lpthread,-lc++,-lc++abi,-lwasi-emulated-mman,-lwasi-emulated-getpid,-lcommon-tag-stubs,--no-whole-archive
 )
 
 ARGS=()
@@ -82,5 +85,30 @@ fi
 ARGS+=("${PASSED_ARGS[@]}")
 
 
+# exec ${NATIVE_COMPILER} "${ARGS[@]}"
 
-exec ${NATIVE_COMPILER} "${ARGS[@]}"
+# TODO: The below code path is only necessary, because we dont support legacy exceptions (yet?)
+# TODO: Thsi is really error prone. We do NOT want to maintain a compiler wrapper that does more than just adding flags.
+# We can probably just include the exception transformation pass in wasmer
+
+if ! $run_linker; then
+    # If we are not linking, we can just run the compiler directly
+    exec ${NATIVE_COMPILER} "${ARGS[@]}"
+fi
+
+# If we are linking, we need to run wasm-opt after the compilation to use the new exception handling
+output_file="a.out"
+for ((i=0; i<${#ARGS[@]}; i++)); do
+    if [ "${ARGS[$i]}" = "-o" ] && [ $((i+1)) -lt ${#ARGS[@]} ]; then
+        output_file="${ARGS[$i+1]}"
+        break
+    elif [[ "${ARGS[$i]}" =~ ^-o(.+)$ ]]; then
+        output_file="${BASH_REMATCH[1]}"
+        break
+    fi
+done
+
+${NATIVE_COMPILER} "${ARGS[@]}" 
+
+# Transform the old exception handling to the new one
+wasm-opt --experimental-new-eh "$output_file" -o "$output_file"
