@@ -15,10 +15,10 @@ cargo binstall -y wasm-tools
 sudo apt update > /dev/null
 sudo apt install -y clang-19 llvm-19 llvm-19-dev nodejs binaryen wabt libpolly-19-dev lld-19 pkg-config libtool unzip  > /dev/null
 
+EMSDK_DIR="/emsdk"
 ORIGINAL_DIR=$(pwd)
-cd ~
-git clone --depth=1 https://github.com/emscripten-core/emsdk.git > /dev/null
-cd emsdk
+git clone --depth=1 https://github.com/emscripten-core/emsdk.git "$EMSDK_DIR" > /dev/null
+cd $EMSDK_DIR
 rm -rf .git
 ./emsdk install 3.1.69 > /dev/null
 ./emsdk activate 3.1.69
@@ -27,8 +27,8 @@ rm -rf .git
 # echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.bashrc
 # echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.profile
 if test -n "${GITHUB_PATH:-}" ; then
-  echo "$(pwd)" >> $GITHUB_PATH
-  echo "$(pwd)/upstream/emscripten" >> $GITHUB_PATH
+  echo "$EMSDK_DIR" >> $GITHUB_PATH
+  echo "$EMSDK_DIR/upstream/emscripten" >> $GITHUB_PATH
 fi
 cd $ORIGINAL_DIR
 
