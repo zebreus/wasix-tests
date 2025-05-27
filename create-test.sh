@@ -34,7 +34,13 @@ cp -r "$TEMPLATE_DIR" "$DEST_DIR"
 
 # Replace occurrences of \"helloworld\" with the new test name in key files
 find "$DEST_DIR" -type f \( -name "*.c" -o -name "*.cpp" -o -name "*.h" -o -name "Makefile" -o -name "*.toml" \) -exec sed -i "s/helloworld/$TEST_NAME/g" {} \;
-mv "$DEST_DIR/helloworld.c" "$DEST_DIR/$TEST_NAME.c"
+
+# Rename the main source file if it follows the template naming
+if [ -f "$DEST_DIR/helloworld.c" ]; then
+    mv "$DEST_DIR/helloworld.c" "$DEST_DIR/$TEST_NAME.c"
+elif [ -f "$DEST_DIR/helloworld.cpp" ]; then
+    mv "$DEST_DIR/helloworld.cpp" "$DEST_DIR/$TEST_NAME.cpp"
+fi
 
 echo "Test directory '$TEST_NAME' created successfully."
 
