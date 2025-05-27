@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef int (* side_type)();
+typedef void (* side_type)();
 
 int main() {
   void *handle = dlopen("libside.so", RTLD_NOW);
