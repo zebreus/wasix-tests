@@ -38,7 +38,7 @@ chmod a+x wasmer
 sudo mv wasmer /usr/bin/wasmer
 rm wasmer.zip
 
-wget -q http://0x0.st/8xgk.zip -O sysroot.zip > /dev/null
+wget -q http://0x0.st/8xEo.zip -O sysroot.zip > /dev/null
 unzip sysroot.zip > /dev/null
 sudo mv sysroot /wasix-sysroot
 rm sysroot.zip
