@@ -37,7 +37,7 @@ COMPILER_ARGS=(
     --target=wasm32-wasi
     --sysroot="${WASIX_SYSROOT}"
     -matomics -mbulk-memory -mmutable-globals
-    -pthread -mthread-model posix -ftls-model=local-exec
+    -pthread -mthread-model posix -ftls-model=global-dynamic
     -fno-trapping-math
     -D_WASI_EMULATED_MMAN -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS
     -fvisibility=default
