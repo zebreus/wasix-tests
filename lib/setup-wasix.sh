@@ -22,7 +22,7 @@ cd emsdk
 rm -rf .git
 ./emsdk install 3.1.69 > /dev/null
 ./emsdk activate 3.1.69
-source "$(pwd)/emsdk_env.sh"
+# source "$(pwd)/emsdk_env.sh"
 # echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.bash_profile
 # echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.bashrc
 # echo 'source "'$(pwd)'/emsdk_env.sh"' >> $HOME/.profile
@@ -32,16 +32,16 @@ if test -n "${GITHUB_PATH:-}" ; then
 fi
 cd $ORIGINAL_DIR
 
-wget -q http://0x0.st/8wwU.zip > /dev/null
-unzip 8wwU.zip > /dev/null
+wget -q http://0x0.st/8xgR.zip -O wasmer.zip > /dev/null
+unzip wasmer.zip > /dev/null
 chmod a+x wasmer
 sudo mv wasmer /usr/bin/wasmer
-rm 8wwU.zip
+rm wasmer.zip
 
-wget -q http://0x0.st/8ww5.zip > /dev/null
-unzip 8ww5.zip > /dev/null
+wget -q http://0x0.st/8xgk.zip -O sysroot.zip > /dev/null
+unzip sysroot.zip > /dev/null
 sudo mv sysroot /wasix-sysroot
-rm 8ww5.zip
+rm sysroot.zip
 
 sudo mkdir -p /usr/lib/llvm-19/lib/clang/19/lib/wasm32-unknown-wasi
 sudo cp /wasix-sysroot/lib/wasi/libclang_rt.builtins-wasm32.a /usr/lib/llvm-19/lib/clang/19/lib/wasm32-unknown-wasi/libclang_rt.builtins.a
