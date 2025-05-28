@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <pthread.h>
-#include <unistd.h>
 
 _Thread_local int toast = 10;
 
