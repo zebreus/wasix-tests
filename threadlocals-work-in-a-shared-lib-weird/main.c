@@ -3,7 +3,7 @@
 #include <dlfcn.h>
 #include <pthread.h>
 
-extern _Thread_local int toast;
+_Thread_local int toast = 10;
 extern void print_toast_from_lib();
 extern void increment_toast_from_lib();
 void increment_toast_from_main() {
