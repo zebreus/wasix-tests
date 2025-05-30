@@ -9,4 +9,11 @@ fi
 
 LIB_PATH=$(dirname "$(realpath "$1")")
 
-exec "${RUNNER}" run --mapdir /lib:"$LIB_PATH" "$@"
+ARGS=("$@")
+if test "1" = "${LLVM_DEBUG:-}"; then
+    ARGS+=(
+        "--llvm-debug-dir" "./llvm-debug"
+    )
+fi
+
+exec "${RUNNER}" run --mapdir /lib:"$LIB_PATH" --llvm "$ARGS"
