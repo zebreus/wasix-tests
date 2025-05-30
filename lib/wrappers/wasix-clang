@@ -63,6 +63,7 @@ LIBRARY_LINKER_ARGS=(
     --shared
     # Import all unresolved symbols
     -Wl,--unresolved-symbols=import-dynamic
+    ${WASIX_SYSROOT}/lib/wasm32-wasi/scrt1.o
 )
 EXECUTABLE_LINKER_ARGS=(
     -Wl,--import-memory
