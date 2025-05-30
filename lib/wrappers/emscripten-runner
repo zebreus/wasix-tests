@@ -7,4 +7,5 @@ if ! command -v "$RUNNER" &>/dev/null; then
     exit 1
 fi
 
-exec "${RUNNER}" "$@"
+# Filter some node.js warning on stderr that are not relevant to the test output.
+exec "${RUNNER}" "$@" 2> >(grep -v 'terminated worker' | grep -v 'user callback triggered after runtime exited or application aborted' >&2)
