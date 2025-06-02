@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 source ../lib/assert.sh
 source ../lib/test-utils.sh
 
-make libside.so main
+make main
 run main
 
 assert_eq "value=10 value=11 value=10 value=12 " "$(cat stdout.log)" "stdout did not match expected value"
