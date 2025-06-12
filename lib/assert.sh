@@ -181,7 +181,7 @@ assert_contain() {
     return 1;
   fi
 
-  if [ -z "${haystack##*$needle*}" ]; then
+  if grep -q "$needle" <<< "$haystack"; then
     return 0
   else
     [ "${#msg}" -gt 0 ] && log_failure "$haystack doesn't contain $needle :: $msg" || true
