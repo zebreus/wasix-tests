@@ -27,7 +27,7 @@ int main(){
     // For your void*
     // Who you gonna call?
     // (ffi_prep_cif!)
-    ffi_status cif_result = ffi_prep_cif(&cif, FFI_WASM32, 1, ret_type, arg_types);
+    ffi_status cif_result = ffi_prep_cif(&cif, FFI_DEFAULT_ABI, 1, ret_type, arg_types);
     if (cif_result != FFI_OK) {
         fprintf(stderr, "ffi_prep_cif failed with status %d\n", cif_result);
         return 1;
