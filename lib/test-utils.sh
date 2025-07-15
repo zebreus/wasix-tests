@@ -10,13 +10,12 @@ run() {
     local executable="$1"
     shift
 
-    set +e
-    "$RUNNER" "./$executable" "$@" > stdout.log 2> stderr.log
-    local status=$?
+    exitcode=0
+    "$RUNNER" "./$executable" "$@" > stdout.log 2> stderr.log || exitcode=$?
 
-    if [ "$status" -ne 0 ]; then
-        assert_eq 0 "$status" "run failed: $(cat stderr.log)"
+    if [ "$exitcode" -ne "0" ]; then
+        assert_eq 0 "$exitcode" "run failed: $(cat stderr.log)" || true
     fi
-    set -e
+    return $exitcode
 }
 
