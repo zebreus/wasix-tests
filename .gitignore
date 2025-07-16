@@ -8,4 +8,4 @@ main
 summary.txt
 pr_comment.txt
 a.out
-llvm-debug
+.wasix-clang-bin
