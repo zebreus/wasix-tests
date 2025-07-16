@@ -19,8 +19,7 @@ disabled_tests=("minimal-threadlocal" "extern-threadlocal-nopic")
 available_tests=()
 enabled_tests=()
 
-selected_tests=( )
-use_only_selected_tests=false
+selected_tests=()
 
 for t in ./*/test.sh; do
     dir=$(dirname "$t")
